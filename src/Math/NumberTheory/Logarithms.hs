@@ -40,8 +40,8 @@ import Data.Array.Unboxed
 import Numeric.Natural
 
 import GHC.Integer.Logarithms
-import GHC.Integer.GMP.Internals (Integer (..))
 #if Base48
+import GHC.Integer.GMP.Internals (Integer (..))
 import GHC.Natural
 #endif
 
@@ -317,4 +317,10 @@ naturalLog2# (NatS# b) = wordLog2# b
 naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
 #else
 naturalLog2# n = integerLog2# (toInteger n)
+#endif
+
+#if __GLASGOW_HASKELL__ < 707
+-- The times they are a-changing. The types of primops too :(
+isTrue# :: Bool -> Bool
+isTrue# = id
 #endif

@@ -9,6 +9,7 @@
 -- Potentially faster power function for 'Integer' base and 'Int'
 -- or 'Word' exponent.
 --
+{-# LANGUAGE CPP          #-}
 {-# LANGUAGE MagicHash    #-}
 {-# LANGUAGE BangPatterns #-}
 module Math.NumberTheory.Powers.Integer
@@ -53,3 +54,9 @@ power b w#
 -- | A raw version of testBit for 'Word#'.
 hasBit# :: Word# -> Int# -> Bool
 hasBit# w# i# = isTrue# (((w# `uncheckedShiftRL#` i#) `and#` 1##) `neWord#` 0##)
+
+#if __GLASGOW_HASKELL__ < 707
+-- The times they are a-changing. The types of primops too :(
+isTrue# :: Bool -> Bool
+isTrue# = id
+#endif

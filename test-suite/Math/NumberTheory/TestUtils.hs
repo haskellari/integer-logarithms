@@ -29,6 +29,7 @@ import Test.Tasty.QuickCheck as QC hiding (Positive, NonNegative, generate, getN
 import Test.SmallCheck.Series (Positive(..), NonNegative(..), Serial(..), Series, generate)
 
 import Control.Applicative
+import Data.Word
 import Numeric.Natural
 
 testSmallAndQuick
