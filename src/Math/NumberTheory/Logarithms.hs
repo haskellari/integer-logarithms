@@ -25,6 +25,8 @@ module Math.NumberTheory.Logarithms
     , wordLog2
 
       -- * Integer logarithms without input checks
+      --
+      -- | These functions are total, however, don't rely on the values with out-of-domain arguments.
     , integerLogBase'
     , integerLog2'
     , integerLog10'
@@ -222,6 +224,8 @@ integerLogBase' b n
       lb = integerLog2' b
       ln = integerLog2' n
 
+-- | Same as 'naturalLogBase', but without checks, saves a little time when
+--   called often for known good input.
 naturalLogBase' :: Natural -> Natural -> Int
 naturalLogBase' b n
     | n < b       = 0
