@@ -17,9 +17,9 @@ module Math.NumberTheory.Powers.Natural
     , naturalWordPower
     ) where
 
-import GHC.Base
+import GHC.Exts
 import Numeric.Natural
-import GHC.Integer.Logarithms (wordLog2#)
+import GHC.Integer.Logarithms.Compat (wordLog2#)
 
 -- | Power of an 'Natural' by the left-to-right repeated squaring algorithm.
 --   This needs two multiplications in each step while the right-to-left

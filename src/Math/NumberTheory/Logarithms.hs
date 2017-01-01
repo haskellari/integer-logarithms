@@ -33,13 +33,13 @@ module Math.NumberTheory.Logarithms
     , wordLog2'
     ) where
 
-import GHC.Base
+import GHC.Exts
 
 import Data.Bits
 import Data.Array.Unboxed
 import Numeric.Natural
 
-import GHC.Integer.Logarithms
+import GHC.Integer.Logarithms.Compat
 #if Base48
 import GHC.Integer.GMP.Internals (Integer (..))
 import GHC.Natural

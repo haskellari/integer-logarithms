@@ -17,8 +17,8 @@ module Math.NumberTheory.Powers.Integer
     , integerWordPower
     ) where
 
-import GHC.Base
-import GHC.Integer.Logarithms (wordLog2#)
+import GHC.Exts
+import GHC.Integer.Logarithms.Compat (wordLog2#)
 
 -- | Power of an 'Integer' by the left-to-right repeated squaring algorithm.
 --   This needs two multiplications in each step while the right-to-left

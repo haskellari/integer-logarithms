@@ -51,6 +51,7 @@ library
     Math.NumberTheory.Logarithms
     Math.NumberTheory.Powers.Integer
     Math.NumberTheory.Powers.Natural
+    GHC.Integer.Logarithms.Compat
   other-extensions:
     BangPatterns
     CPP
