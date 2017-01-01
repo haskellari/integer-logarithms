@@ -22,6 +22,7 @@ import Test.Tasty
 #else
 import Data.Word
 #endif
+import Numeric.Natural
 
 import Math.NumberTheory.Logarithms
 import Math.NumberTheory.TestUtils
@@ -38,11 +39,39 @@ integerLog2Property (Positive n) = 2 ^ l <= n && 2 ^ (l + 1) > n
   where
     l = toInteger $ integerLog2 n
 
+integerLog2HugeProperty :: Huge (Positive Integer) -> Bool
+integerLog2HugeProperty (Huge (Positive n)) = 2 ^ l <= n && 2 ^ (l + 1) > n
+  where
+    l = toInteger $ integerLog2 n
+
 -- | Check that 'integerLog10' returns the largest integer @l@ such that 10 ^ @l@ <= @n@ and 10 ^ (@l@+1) > @n@.
 integerLog10Property :: Positive Integer -> Bool
 integerLog10Property (Positive n) = 10 ^ l <= n && 10 ^ (l + 1) > n
   where
     l = toInteger $ integerLog10 n
+
+-- | Check that 'naturalLogBase' returns the largest natural @l@ such that @b@ ^ @l@ <= @n@ and @b@ ^ (@l@+1) > @n@.
+naturalLogBaseProperty :: Positive Natural -> Positive Natural -> Bool
+naturalLogBaseProperty (Positive b) (Positive n) = b == 1 || b ^ l <= n && b ^ (l + 1) > n
+  where
+    l = fromIntegral $ naturalLogBase b n
+
+-- | Check that 'naturalLog2' returns the largest natural @l@ such that 2 ^ @l@ <= @n@ and 2 ^ (@l@+1) > @n@.
+naturalLog2Property :: Positive Natural -> Bool
+naturalLog2Property (Positive n) = 2 ^ l <= n && 2 ^ (l + 1) > n
+  where
+    l = fromIntegral $ naturalLog2 n
+
+naturalLog2HugeProperty :: Huge (Positive Natural) -> Bool
+naturalLog2HugeProperty (Huge (Positive n)) = 2 ^ l <= n && 2 ^ (l + 1) > n
+  where
+    l = fromIntegral $ naturalLog2 n
+
+-- | Check that 'naturalLog10' returns the largest natural @l@ such that 10 ^ @l@ <= @n@ and 10 ^ (@l@+1) > @n@.
+naturalLog10Property :: Positive Natural -> Bool
+naturalLog10Property (Positive n) = 10 ^ l <= n && 10 ^ (l + 1) > n
+  where
+    l = fromIntegral $ naturalLog10 n
 
 -- | Check that 'intLog2' returns the largest integer @l@ such that 2 ^ @l@ <= @n@ and 2 ^ (@l@+1) > @n@.
 intLog2Property :: Positive Int -> Bool
@@ -98,7 +127,12 @@ testSuite :: TestTree
 testSuite = testGroup "Logarithms"
   [ testSmallAndQuick "integerLogBase"  integerLogBaseProperty
   , testSmallAndQuick "integerLog2"     integerLog2Property
+  , testSmallAndQuick "integerLog2Huge" integerLog2HugeProperty
   , testSmallAndQuick "integerLog10"    integerLog10Property
+  , testSmallAndQuick "naturalLogBase"  naturalLogBaseProperty
+  , testSmallAndQuick "naturalLog2"     naturalLog2Property
+  , testSmallAndQuick "naturalLog2Huge" naturalLog2HugeProperty
+  , testSmallAndQuick "naturalLog10"    naturalLog10Property
   , testSmallAndQuick "intLog2"         intLog2Property
   , testSmallAndQuick "wordLog2"        wordLog2Property
 

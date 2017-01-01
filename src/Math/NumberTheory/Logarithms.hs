@@ -17,6 +17,10 @@ module Math.NumberTheory.Logarithms
     , integerLog2
     , integerLog10
 
+    , naturalLogBase
+    , naturalLog2
+    , naturalLog10
+
     , intLog2
     , wordLog2
 
@@ -33,8 +37,13 @@ import GHC.Base
 
 import Data.Bits
 import Data.Array.Unboxed
+import Numeric.Natural
 
 import GHC.Integer.Logarithms
+import GHC.Integer.GMP.Internals (Integer (..))
+#if Base48
+import GHC.Natural
+#endif
 
 #if CheckBounds
 import Data.Array.IArray (IArray, (!))
@@ -43,6 +52,7 @@ import Data.Array.Base (unsafeAt)
 #endif
 
 import Math.NumberTheory.Powers.Integer
+import Math.NumberTheory.Powers.Natural
 
 -- | Calculate the integer logarithm for an arbitrary base.
 --   The base must be greater than 1, the second argument, the number
@@ -70,6 +80,32 @@ integerLog2 n
   | n < 1       = error "Math.NumberTheory.Logarithms.integerLog2: argument must be positive"
   | otherwise   = I# (integerLog2# n)
 
+-- | Cacluate the integer logarithm for an arbitrary base.
+--   The base must be greater than 1, the second argument, the number
+--   whose logarithm is sought, must be positive, otherwise an error is thrown.
+--   If @base == 2@, the specialised version is called, which is more
+--   efficient than the general algorithm.
+--
+--   Satisfies:
+--
+-- > base ^ integerLogBase base m <= m < base ^ (integerLogBase base m + 1)
+--
+-- for @base > 1@ and @m > 0@.
+naturalLogBase :: Natural -> Natural -> Int
+naturalLogBase b n
+  | n < 1       = error "Math.NumberTheory.Logarithms.naturalLogBase: argument must be positive."
+  | n < b       = 0
+  | b == 2      = naturalLog2' n
+  | b < 2       = error "Math.NumberTheory.Logarithms.naturalLogBase: base must be greater than one."
+  | otherwise   = naturalLogBase' b n
+
+-- | Calculate the natural logarithm of an 'Natural' to base 2.
+--   The argument must be non-zero, otherwise an error is thrown.
+naturalLog2 :: Natural -> Int
+naturalLog2 n
+  | n < 1       = error "Math.NumberTheory.Logarithms.naturalLog2: argument must be non-zero"
+  | otherwise   = I# (naturalLog2# n)
+
 -- | Calculate the integer logarithm of an 'Int' to base 2.
 --   The argument must be positive, otherwise an error is thrown.
 intLog2 :: Int -> Int
@@ -89,6 +125,11 @@ wordLog2 (W# w#)
 integerLog2' :: Integer -> Int
 integerLog2' n = I# (integerLog2# n)
 
+-- | Same as 'naturalLog2', but without checks, saves a little time when
+--   called often for known good input.
+naturalLog2' :: Natural -> Int
+naturalLog2' n = I# (naturalLog2# n)
+
 -- | Same as 'intLog2', but without checks, saves a little time when
 --   called often for known good input.
 intLog2' :: Int -> Int
@@ -106,6 +147,13 @@ integerLog10 n
   | n < 1     = error "Math.NumberTheory.Logarithms.integerLog10: argument must be positive"
   | otherwise = integerLog10' n
 
+-- | Calculate the integer logarithm of an 'Integer' to base 10.
+--   The argument must be not zero, otherwise an error is thrown.
+naturalLog10 :: Natural -> Int
+naturalLog10 n
+  | n < 1     = error "Math.NumberTheory.Logarithms.naturalaLog10: argument must be non-zero"
+  | otherwise = naturalLog10' n
+
 -- | Same as 'integerLog10', but without a check for a positive
 --   argument. Saves a little time when called often for known good
 --   input.
@@ -120,6 +168,22 @@ integerLog10' n
       u  = 1936274
       v  = 6432163
       -- so ex is a good approximation to integerLogBase 10 n
+      ex = fromInteger ((u * fromIntegral ln) `quot` v)
+
+-- | Same as 'naturalLog10', but without a check for a positive
+--   argument. Saves a little time when called often for known good
+--   input.
+naturalLog10' :: Natural -> Int
+naturalLog10' n
+  | n < 10      = 0
+  | n < 100     = 1
+  | otherwise   = ex + naturalLog10' (n `quot` naturalPower 10 ex)
+    where
+      ln = I# (naturalLog2# n)
+      -- u/v is a good approximation of log 2/log 10
+      u  = 1936274
+      v  = 6432163
+      -- so ex is a good approximation to naturalLogBase 10 n
       ex = fromInteger ((u * fromIntegral ln) `quot` v)
 
 -- | Same as 'integerLogBase', but without checks, saves a little time when
@@ -157,6 +221,40 @@ integerLogBase' b n
     where
       lb = integerLog2' b
       ln = integerLog2' n
+
+naturalLogBase' :: Natural -> Natural -> Int
+naturalLogBase' b n
+    | n < b       = 0
+  | ln-lb < lb  = 1     -- overflow safe version of ln < 2*lb, implies n < b*b
+  | b < 33      = let bi = fromIntegral b
+                      ix = 2*bi-4
+                      -- u/v is a good approximation of log 2/log b
+                      u  = logArr `unsafeAt` ix
+                      v  = logArr `unsafeAt` (ix+1)
+                      -- hence ex is a rather good approximation of integerLogBase b n
+                      -- most of the time, it will already be exact
+                      ex = fromNatural ((fromIntegral u * fromIntegral ln) `quot` fromIntegral v)
+                  in case u of
+                      1 -> ln `quot` v      -- a power of 2, easy
+                      _ -> ex + naturalLogBase' b (n `quot` naturalPower b ex)
+  | otherwise   = let -- shift b so that 16 <= bi < 32
+                      bi = fromNatural (b `shiftR` (lb-4))
+                      -- we choose an approximation of log 2 / log (bi+1) to
+                      -- be sure we underestimate
+                      ix = 2*bi-2
+                      -- u/w is a reasonably good approximation to log 2/log b
+                      -- it is too small, but not by much, so the recursive call
+                      -- should most of the time be caught by one of the first
+                      -- two guards unless n is huge, but then it'd still be
+                      -- a call with a much smaller second argument.
+                      u  = fromIntegral $ logArr `unsafeAt` ix
+                      v  = fromIntegral $ logArr `unsafeAt` (ix+1)
+                      w  = v + u*fromIntegral (lb-4)
+                      ex = fromNatural ((u * fromIntegral ln) `quot` w)
+                  in ex + naturalLogBase' b (n `quot` naturalPower b ex)
+    where
+      lb = naturalLog2' b
+      ln = naturalLog2' n
 
 -- Lookup table for logarithms of 2 <= k <= 32
 -- In each row "x , y", x/y is a good rational approximation of log 2  / log k.
@@ -204,4 +302,19 @@ logArr = listArray (0, 61)
 #if CheckBounds
 unsafeAt :: (IArray a e, Ix i) => a i e -> i -> e
 unsafeAt = (!)`
+#endif
+
+-------------------------------------------------------------------------------
+-- Natural helpers
+-------------------------------------------------------------------------------
+
+fromNatural :: Num a => Natural -> a
+fromNatural = fromIntegral
+
+naturalLog2# :: Natural -> Int#
+#if Base48
+naturalLog2# (NatS# b) = wordLog2# b
+naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
+#else
+naturalLog2# n = integerLog2# (toInteger n)
 #endif

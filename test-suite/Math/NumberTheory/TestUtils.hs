@@ -18,6 +18,7 @@
 module Math.NumberTheory.TestUtils
   ( module Test.SmallCheck.Series
   , Power (..)
+  , Huge (..)
   , testSmallAndQuick
   ) where
 
@@ -28,6 +29,7 @@ import Test.Tasty.QuickCheck as QC hiding (Positive, NonNegative, generate, getN
 import Test.SmallCheck.Series (Positive(..), NonNegative(..), Serial(..), Series, generate)
 
 import Control.Applicative
+import Numeric.Natural
 
 testSmallAndQuick
   :: SC.Testable IO a
@@ -42,6 +44,12 @@ testSmallAndQuick name f = testGroup name
 -- Serial monadic actions
 
 instance Monad m => Serial m Word where
+  series =
+    generate (\d -> if d >= 0 then pure 0 else empty) <|> nats
+    where
+      nats = generate $ \d -> if d > 0 then [1 .. fromInteger (toInteger d)] else empty
+
+instance Monad m => Serial m Natural where
   series =
     generate (\d -> if d >= 0 then pure 0 else empty) <|> nats
     where
@@ -63,6 +71,21 @@ instance (Num a, Ord a, Integral a, Arbitrary a) => Arbitrary (Power a) where
 suchThatSerial :: Series m a -> (a -> Bool) -> Series m a
 suchThatSerial s p = s >>= \x -> if p x then pure x else empty
 
+-------------------------------------------------------------------------------
+-- Huge
+
+newtype Huge a = Huge { getHuge :: a }
+  deriving (Eq, Ord, Read, Show, Num, Enum, Bounded, Integral, Real)
+
+instance (Num a, Arbitrary a) => Arbitrary (Huge a) where
+  arbitrary = do
+    Positive l <- arbitrary
+    ds <- vector (l :: Int)
+    return $ Huge $ foldl1 (\acc n -> acc * 2^(63 :: Int) + n) ds
+
+-- | maps 'Huge' constructor over series
+instance Serial m a => Serial m (Huge a) where
+  series = fmap Huge series
 
 -------------------------------------------------------------------------------
 -- Positive from smallcheck
