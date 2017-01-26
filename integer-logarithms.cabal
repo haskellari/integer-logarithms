@@ -1,5 +1,5 @@
 name:               integer-logarithms
-version:            1
+version:            1.0.1
 cabal-version:      >= 1.10
 author:             Daniel Fischer
 copyright:          (c) 2011 Daniel Fischer
@@ -31,7 +31,7 @@ tested-with         :
   GHC==7.10.3,
   GHC==8.0.1
 
-extra-source-files  : readme.md
+extra-source-files  : readme.md changelog.md
 
 flag integer-gmp
   description:  integer-gmp or integer-simple
