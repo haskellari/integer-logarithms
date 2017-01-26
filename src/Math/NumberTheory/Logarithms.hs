@@ -42,7 +42,7 @@ import Data.Array.Unboxed
 import Numeric.Natural
 
 import GHC.Integer.Logarithms.Compat
-#if Base48
+#if Base48 && defined(MIN_VERSION_integer_gmp)
 import GHC.Integer.GMP.Internals (Integer (..))
 import GHC.Natural
 #endif
@@ -316,7 +316,7 @@ fromNatural :: Num a => Natural -> a
 fromNatural = fromIntegral
 
 naturalLog2# :: Natural -> Int#
-#if Base48
+#if Base48 && defined(MIN_VERSION_integer_gmp)
 naturalLog2# (NatS# b) = wordLog2# b
 naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
 #else
