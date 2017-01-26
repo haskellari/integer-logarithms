@@ -1,5 +1,5 @@
 name:               integer-logarithms
-version:            1
+version:            1.0.1
 cabal-version:      >= 1.10
 author:             Daniel Fischer
 copyright:          (c) 2011 Daniel Fischer
@@ -31,7 +31,12 @@ tested-with         :
   GHC==7.10.3,
   GHC==8.0.1
 
-extra-source-files  : readme.md
+extra-source-files  : readme.md changelog.md
+
+flag integer-gmp
+  description:  integer-gmp or integer-simple
+  default:      True
+  manual:       False
 
 flag check-bounds
   description:  Replace unsafe array operations with safe ones
@@ -44,12 +49,18 @@ library
   build-depends:
     base >= 4.3 && < 4.10,
     array >= 0.3 && < 0.6,
-    ghc-prim < 0.6,
-    integer-gmp < 1.1
+    ghc-prim < 0.6
   if impl(ghc >= 7.10)
     cpp-options: -DBase48
   else
     build-depends: nats >= 1.1 && <1.2
+
+  if flag(integer-gmp)
+    build-depends:
+      integer-gmp < 1.1
+  else
+    build-depends:
+      integer-simple
 
   exposed-modules:
     Math.NumberTheory.Logarithms
