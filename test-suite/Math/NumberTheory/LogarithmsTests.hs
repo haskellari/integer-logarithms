@@ -27,6 +27,9 @@ import Numeric.Natural
 import Math.NumberTheory.Logarithms
 import Math.NumberTheory.TestUtils
 
+-- Arbitrary Natural
+import Orphans ()
+
 -- | Check that 'integerLogBase' returns the largest integer @l@ such that @b@ ^ @l@ <= @n@ and @b@ ^ (@l@+1) > @n@.
 integerLogBaseProperty :: Positive Integer -> Positive Integer -> Bool
 integerLogBaseProperty (Positive b) (Positive n) = b == 1 || b ^ l <= n && b ^ (l + 1) > n
