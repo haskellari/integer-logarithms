@@ -27,6 +27,9 @@ import Math.NumberTheory.Powers.Natural
 import Numeric.Natural
 import Math.NumberTheory.TestUtils
 
+-- Arbitrary Natural
+import Orphans ()
+
 -- | Check that 'naturalPower' == '^'.
 naturalPowerProperty :: Natural -> Power Int -> Bool
 naturalPowerProperty a (Power b) = naturalPower a b == a ^ b
