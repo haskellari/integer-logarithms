@@ -16,6 +16,10 @@ module Math.NumberTheory.Powers.Natural
     , naturalWordPower
     ) where
 
+#if !MIN_VERSION_base(4,8,0)
+import Data.Word
+#endif
+
 import Numeric.Natural
 
 -- | Power of an 'Natural' by the left-to-right repeated squaring algorithm.

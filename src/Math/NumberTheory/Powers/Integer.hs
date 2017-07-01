@@ -16,6 +16,10 @@ module Math.NumberTheory.Powers.Integer
     , integerWordPower
     ) where
 
+#if !MIN_VERSION_base(4,8,0)
+import Data.Word
+#endif
+
 -- | Power of an 'Integer' by the left-to-right repeated squaring algorithm.
 --   This needs two multiplications in each step while the right-to-left
 --   algorithm needs only one multiplication for 0-bits, but here the
