@@ -53,9 +53,6 @@ import Data.Array.IArray (IArray, (!))
 import Data.Array.Base (unsafeAt)
 #endif
 
-import Math.NumberTheory.Powers.Integer
-import Math.NumberTheory.Powers.Natural
-
 -- | Calculate the integer logarithm for an arbitrary base.
 --   The base must be greater than 1, the second argument, the number
 --   whose logarithm is sought, must be positive, otherwise an error is thrown.
@@ -163,7 +160,7 @@ integerLog10' :: Integer -> Int
 integerLog10' n
   | n < 10      = 0
   | n < 100     = 1
-  | otherwise   = ex + integerLog10' (n `quot` integerPower 10 ex)
+  | otherwise   = ex + integerLog10' (n `quot` 10 ^ ex)
     where
       ln = I# (integerLog2# n)
       -- u/v is a good approximation of log 2/log 10
@@ -179,7 +176,7 @@ naturalLog10' :: Natural -> Int
 naturalLog10' n
   | n < 10      = 0
   | n < 100     = 1
-  | otherwise   = ex + naturalLog10' (n `quot` naturalPower 10 ex)
+  | otherwise   = ex + naturalLog10' (n `quot` 10 ^ ex)
     where
       ln = I# (naturalLog2# n)
       -- u/v is a good approximation of log 2/log 10
@@ -204,7 +201,7 @@ integerLogBase' b n
                       ex = fromInteger ((fromIntegral u * fromIntegral ln) `quot` fromIntegral v)
                   in case u of
                       1 -> ln `quot` v      -- a power of 2, easy
-                      _ -> ex + integerLogBase' b (n `quot` integerPower b ex)
+                      _ -> ex + integerLogBase' b (n `quot` b ^ ex)
   | otherwise   = let -- shift b so that 16 <= bi < 32
                       bi = fromInteger (b `shiftR` (lb-4))
                       -- we choose an approximation of log 2 / log (bi+1) to
@@ -219,7 +216,7 @@ integerLogBase' b n
                       v  = fromIntegral $ logArr `unsafeAt` (ix+1)
                       w  = v + u*fromIntegral (lb-4)
                       ex = fromInteger ((u * fromIntegral ln) `quot` w)
-                  in ex + integerLogBase' b (n `quot` integerPower b ex)
+                  in ex + integerLogBase' b (n `quot` b ^ ex)
     where
       lb = integerLog2' b
       ln = integerLog2' n
@@ -240,7 +237,7 @@ naturalLogBase' b n
                       ex = fromNatural ((fromIntegral u * fromIntegral ln) `quot` fromIntegral v)
                   in case u of
                       1 -> ln `quot` v      -- a power of 2, easy
-                      _ -> ex + naturalLogBase' b (n `quot` naturalPower b ex)
+                      _ -> ex + naturalLogBase' b (n `quot` b ^ ex)
   | otherwise   = let -- shift b so that 16 <= bi < 32
                       bi = fromNatural (b `shiftR` (lb-4))
                       -- we choose an approximation of log 2 / log (bi+1) to
@@ -255,7 +252,7 @@ naturalLogBase' b n
                       v  = fromIntegral $ logArr `unsafeAt` (ix+1)
                       w  = v + u*fromIntegral (lb-4)
                       ex = fromNatural ((u * fromIntegral ln) `quot` w)
-                  in ex + naturalLogBase' b (n `quot` naturalPower b ex)
+                  in ex + naturalLogBase' b (n `quot` b ^ ex)
     where
       lb = naturalLog2' b
       ln = naturalLog2' n
