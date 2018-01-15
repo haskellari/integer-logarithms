@@ -11,7 +11,6 @@
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses      #-}
-{-# LANGUAGE StandaloneDeriving         #-}
 
 {-# OPTIONS_GHC -fno-warn-orphans #-}
 
@@ -22,15 +21,12 @@ module Math.NumberTheory.TestUtils
   , testSmallAndQuick
   ) where
 
-import Test.SmallCheck.Series (cons2)
 import Test.Tasty
 import Test.Tasty.SmallCheck as SC
 import Test.Tasty.QuickCheck as QC hiding (Positive, NonNegative, generate, getNonNegative)
 import Test.SmallCheck.Series (Positive(..), NonNegative(..), Serial(..), Series, generate)
 
 import Control.Applicative
-import Data.Word
-import Numeric.Natural
 
 testSmallAndQuick
   :: SC.Testable IO a
@@ -40,21 +36,6 @@ testSmallAndQuick name f = testGroup name
   [ SC.testProperty "smallcheck" f
   , QC.testProperty "quickcheck" f
   ]
-
--------------------------------------------------------------------------------
--- Serial monadic actions
-
-instance Monad m => Serial m Word where
-  series =
-    generate (\d -> if d >= 0 then pure 0 else empty) <|> nats
-    where
-      nats = generate $ \d -> if d > 0 then [1 .. fromInteger (toInteger d)] else empty
-
-instance Monad m => Serial m Natural where
-  series =
-    generate (\d -> if d >= 0 then pure 0 else empty) <|> nats
-    where
-      nats = generate $ \d -> if d > 0 then [1 .. fromInteger (toInteger d)] else empty
 
 -------------------------------------------------------------------------------
 -- Power
