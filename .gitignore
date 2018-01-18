@@ -1,4 +1,6 @@
+cabal.sandbox.config
 dist
 dist-newstyle
+.cabal-sandbox
 .ghc.environment.*
 .stack-work
