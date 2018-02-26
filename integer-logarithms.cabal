@@ -1,5 +1,5 @@
 name:               integer-logarithms
-version:            1.0.2
+version:            1.0.3
 cabal-version:      >= 1.10
 author:             Daniel Fischer
 copyright:          (c) 2011 Daniel Fischer
