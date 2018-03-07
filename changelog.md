@@ -1,3 +1,9 @@
+1.0.2.1
+-------
+
+- GHC-8.4.1 compatible release
+- Bump dependencies' bounds
+
 1.0.2
 -----
 
