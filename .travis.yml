@@ -83,6 +83,7 @@ install:
   - rm -fv cabal.project cabal.project.local
   - grep -Ev -- '^\s*--' ${HOME}/.cabal/config | grep -Ev '^\s*$'
   - "printf 'packages: \".\"\\n' > cabal.project"
+  - "if [ $HCNUMVER -ge 80400 ]; then echo 'allow-newer: hashable:base' >> cabal.project; fi"
   - cat cabal.project
   - if [ -f "./configure.ac" ]; then
       (cd "." && autoreconf -i);
@@ -102,6 +103,7 @@ script:
   - cd ${DISTDIR} || false
   - find . -maxdepth 1 -name '*.tar.gz' -exec tar -xvf '{}' \;
   - "printf 'packages: integer-logarithms-*/*.cabal\\n' > cabal.project"
+  - "if [ $HCNUMVER -ge 80400 ]; then echo 'allow-newer: hashable:base' >> cabal.project; fi"
   - cat cabal.project
   # this builds all libraries and executables (without tests/benchmarks)
   - cabal new-build -w ${HC} --disable-tests --disable-benchmarks all
