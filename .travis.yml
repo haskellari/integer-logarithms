@@ -83,7 +83,7 @@ install:
   # Overlay Hackage Package Index for GHC HEAD: https://github.com/hvr/head.hackage
   - |
     if $GHCHEAD; then
-      sed -i.bak 's/-- allow-newer:.*/allow-newer: *:base, *:template-haskell, *:ghc, *:Cabal/' ${HOME}/.cabal/config
+      sed -i.bak 's/-- allow-newer:.*/allow-newer: *:base, *:template-haskell, *:ghc, *:Cabal, *:stm/' ${HOME}/.cabal/config
 
       echo 'repository head.hackage'                                                        >> ${HOME}/.cabal/config
       echo '   url: http://head.hackage.haskell.org/'                                       >> ${HOME}/.cabal/config
