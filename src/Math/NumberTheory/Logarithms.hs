@@ -302,7 +302,7 @@ logArr = listArray (0, 61)
 
 #if CheckBounds
 unsafeAt :: (IArray a e, Ix i) => a i e -> i -> e
-unsafeAt = (!)`
+unsafeAt = (!)
 #endif
 
 -------------------------------------------------------------------------------
