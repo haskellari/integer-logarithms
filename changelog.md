@@ -1,3 +1,9 @@
+1.0.2.2
+-------
+
+- GHC-8.6.1 compatible relase
+- Fix compilation when `+check-bounds`
+
 1.0.2.1
 -------
 
