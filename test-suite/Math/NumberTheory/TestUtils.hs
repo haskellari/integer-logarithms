@@ -18,10 +18,12 @@ module Math.NumberTheory.TestUtils
   ( module Test.SmallCheck.Series
   , Power (..)
   , Huge (..)
+  , PNO (..)
   , testSmallAndQuick
   ) where
 
-import Test.Tasty
+import Control.Monad (guard)
+import Test.Tasty (testGroup, TestTree)
 import Test.Tasty.SmallCheck as SC
 import Test.Tasty.QuickCheck as QC hiding (Positive, NonNegative, generate, getNonNegative)
 import Test.SmallCheck.Series (Positive(..), NonNegative(..), Serial(..), Series, generate)
@@ -68,6 +70,21 @@ instance (Num a, Arbitrary a) => Arbitrary (Huge a) where
 -- | maps 'Huge' constructor over series
 instance Serial m a => Serial m (Huge a) where
   series = fmap Huge series
+
+-------------------------------------------------------------------------------
+-- PositiveNotOne
+
+newtype PNO = PNO { getPno :: Rational }
+  deriving (Eq, Ord, Read, Show, Num)
+
+instance Arbitrary PNO where
+  arbitrary = fmap PNO $ arbitrary `suchThat` \r -> r > 1
+
+instance Monad m => Serial m PNO where
+  series = do
+    r <- series
+    guard (r > 1)
+    return (PNO r)
 
 -------------------------------------------------------------------------------
 -- Positive from smallcheck

@@ -126,6 +126,14 @@ wordLog2'Property (Positive n) = 2 ^ l <= n && (2 ^ (l + 1) > n || n > maxBound 
   where
     l = wordLog2' n
 
+-- what this property should be?
+rationalLogBaseProperty :: PNO -> PNO -> Bool
+rationalLogBaseProperty (PNO b) (PNO n)
+    | otherwise      = b ^^ l <= n && b ^^ (l + 1) > n
+  where
+    l :: Int
+    l = rationalLogBase b n
+
 testSuite :: TestTree
 testSuite = testGroup "Logarithms"
   [ testSmallAndQuick "integerLogBase"  integerLogBaseProperty
@@ -146,4 +154,6 @@ testSuite = testGroup "Logarithms"
   , testSmallAndQuick "integerLog10'"   integerLog10'Property
   , testSmallAndQuick "intLog2'"        intLog2'Property
   , testSmallAndQuick "wordLog2'"       wordLog2'Property
+
+  , testSmallAndQuick "rationalLogBase" rationalLogBaseProperty
   ]

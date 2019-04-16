@@ -36,6 +36,9 @@ module Math.NumberTheory.Logarithms
 
     , intLog2'
     , wordLog2'
+
+    -- * Rational logarithm
+    , rationalLogBase
     ) where
 
 import GHC.Exts
@@ -43,6 +46,7 @@ import GHC.Exts
 import Data.Bits
 import Data.Array.Unboxed
 import Numeric.Natural
+import Data.Ratio (numerator, denominator)
 
 import GHC.Integer.Logarithms.Compat
 #if MIN_VERSION_base(4,8,0) && defined(MIN_VERSION_integer_gmp)
@@ -328,3 +332,25 @@ naturalLog2# n = integerLog2# (toInteger n)
 isTrue# :: Bool -> Bool
 isTrue# = id
 #endif
+
+-------------------------------------------------------------------------------
+-- Rational logarithm
+-------------------------------------------------------------------------------
+
+-- approximate
+rationalLogBase :: Rational -> Rational -> Int
+rationalLogBase uv xy
+    | uv < 1    = negate (rationalLogBase (recip uv) xy)
+    | xy < 1    = negate (rationalLogBase uv (recip xy))
+--    | uv ^^ (guess + 1) <= xy = guess + 1
+--    | uv ^^ guess > xy        = guess - 1
+    | otherwise               = guess
+  where
+    u = numerator uv
+    v = denominator uv
+
+    x = numerator xy
+    y = denominator xy
+
+    guess = (integerLogBase u x - integerLogBase u y) `div` (1 - integerLogBase u v)
+
