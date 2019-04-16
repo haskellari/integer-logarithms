@@ -10,6 +10,13 @@
 -- or 'Word' exponent.
 --
 {-# LANGUAGE CPP          #-}
+#if __GLASGOW_HASKELL__ >= 702
+#if __GLASGOW_HASKELL__ >= 704
+{-# LANGUAGE Safe #-}
+#else
+{-# LANGUAGE Trustworthy #-}
+#endif
+#endif
 module Math.NumberTheory.Powers.Integer
     {-# DEPRECATED "It is no faster than (^)" #-}
     ( integerPower

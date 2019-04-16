@@ -1,5 +1,5 @@
 name:               integer-logarithms
-version:            1.0.2.2
+version:            1.0.3
 cabal-version:      >= 1.10
 author:             Daniel Fischer
 copyright:          (c) 2011 Daniel Fischer
@@ -53,10 +53,9 @@ library
     base >= 4.3 && < 4.13,
     array >= 0.3 && < 0.6,
     ghc-prim < 0.6
-  if impl(ghc >= 7.10)
-    cpp-options: -DBase48
-  else
-    build-depends: nats >= 1.1 && <1.2
+
+  if !impl(ghc >= 7.10)
+    build-depends: nats >= 1.1.2 && <1.2
 
   if flag(integer-gmp)
     build-depends:

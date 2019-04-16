@@ -1,3 +1,8 @@
+1.0.3
+-----
+
+- Mark all modules `Trustworthy`. (deprecated modules are `Safe` for GHC-7.4+).
+
 1.0.2.2
 -------
 

@@ -8,6 +8,9 @@
 --
 -- Low level stuff for integer logarithms.
 {-# LANGUAGE CPP, MagicHash, UnboxedTuples #-}
+#if __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 module GHC.Integer.Logarithms.Compat
     ( -- * Functions
       integerLogBase#
