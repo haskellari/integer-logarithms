@@ -11,6 +11,9 @@
 --
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE MagicHash #-}
+#if __GLASGOW_HASKELL__ >= 702
+{-# LANGUAGE Trustworthy #-}
+#endif
 module Math.NumberTheory.Logarithms
     ( -- * Integer logarithms with input checks
       integerLogBase
@@ -42,7 +45,7 @@ import Data.Array.Unboxed
 import Numeric.Natural
 
 import GHC.Integer.Logarithms.Compat
-#if Base48 && defined(MIN_VERSION_integer_gmp)
+#if MIN_VERSION_base(4,8,0) && defined(MIN_VERSION_integer_gmp)
 import GHC.Integer.GMP.Internals (Integer (..))
 import GHC.Natural
 #endif
@@ -313,7 +316,7 @@ fromNatural :: Num a => Natural -> a
 fromNatural = fromIntegral
 
 naturalLog2# :: Natural -> Int#
-#if Base48 && defined(MIN_VERSION_integer_gmp)
+#if MIN_VERSION_base(4,8,0) && defined(MIN_VERSION_integer_gmp)
 naturalLog2# (NatS# b) = wordLog2# b
 naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
 #else
