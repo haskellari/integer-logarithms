@@ -68,7 +68,7 @@ naturalLog2Property (Positive n) = 2 ^ l <= n && 2 ^ (l + 1) > n
 naturalLog2HugeProperty :: Huge (Positive Natural) -> Bool
 naturalLog2HugeProperty (Huge (Positive n)) = 2 ^ l <= n && 2 ^ (l + 1) > n
   where
-    l = fromIntegral $ naturalLog2 n
+    l = naturalLog2 n
 
 -- | Check that 'naturalLog10' returns the largest natural @l@ such that 10 ^ @l@ <= @n@ and 10 ^ (@l@+1) > @n@.
 naturalLog10Property :: Positive Natural -> Bool
