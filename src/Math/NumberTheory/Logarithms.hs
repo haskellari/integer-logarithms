@@ -44,6 +44,10 @@ import Data.Bits
 import Data.Array.Unboxed
 import Numeric.Natural
 
+#ifdef MIN_VERSION_ghc_bignum
+import qualified GHC.Num.Natural as BN
+#endif
+
 import GHC.Integer.Logarithms.Compat
 #if MIN_VERSION_base(4,8,0) && defined(MIN_VERSION_integer_gmp)
 import GHC.Integer.GMP.Internals (Integer (..))
@@ -316,11 +320,15 @@ fromNatural :: Num a => Natural -> a
 fromNatural = fromIntegral
 
 naturalLog2# :: Natural -> Int#
+#ifdef MIN_VERSION_ghc_bignum
+naturalLog2# n = word2Int# (BN.naturalLog2# n)
+#else
 #if MIN_VERSION_base(4,8,0) && defined(MIN_VERSION_integer_gmp)
 naturalLog2# (NatS# b) = wordLog2# b
 naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
 #else
 naturalLog2# n = integerLog2# (toInteger n)
+#endif
 #endif
 
 #if __GLASGOW_HASKELL__ < 707
