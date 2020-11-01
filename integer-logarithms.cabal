@@ -1,9 +1,10 @@
 name:               integer-logarithms
-version:            1.0.3
-x-revision:         2
+version:            1.0.3.1
 cabal-version:      >=1.10
 author:             Daniel Fischer
-copyright:          (c) 2011 Daniel Fischer, 2017-2020 Oleg Grenrus, Andrew Lelechenko
+copyright:
+  (c) 2011 Daniel Fischer, 2017-2020 Oleg Grenrus, Andrew Lelechenko
+
 license:            MIT
 license-file:       LICENSE
 maintainer:         Oleg Grenrus <oleg.grenrus@iki.fi>
@@ -37,8 +38,8 @@ tested-with:
   , GHCJS ==8.4
 
 extra-source-files:
-  readme.md
   changelog.md
+  readme.md
 
 flag integer-gmp
   description: integer-gmp or integer-simple
@@ -61,7 +62,7 @@ library
   if !impl(ghc >=7.10)
     build-depends: nats >=1.1.2 && <1.2
 
-  if impl(ghc >= 9.0)
+  if impl(ghc >=9.0)
     build-depends:
         base        >=4.15
       , ghc-bignum  >=1.0  && <1.1
@@ -79,11 +80,12 @@ library
       build-depends: integer-simple
 
   exposed-modules:
-    GHC.Integer.Logarithms.Compat
     Math.NumberTheory.Logarithms
     Math.NumberTheory.Powers.Integer
     Math.NumberTheory.Powers.Natural
 
+  -- compat module
+  exposed-modules:  GHC.Integer.Logarithms.Compat
   other-extensions:
     BangPatterns
     CPP
