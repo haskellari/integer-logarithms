@@ -2,9 +2,13 @@
 #
 #   haskell-ci '--output=.travis.yml' '--config=haskell-ci.config' 'integer-logarithms.cabal'
 #
+# To regenerate the script (for example after adjusting tested-with) run
+#
+#   haskell-ci regenerate
+#
 # For more information, see https://github.com/haskell-CI/haskell-ci
 #
-# version: 0.9.20200125
+# version: 0.11.20200918
 #
 version: ~> 1.0
 language: c
@@ -29,38 +33,44 @@ before_cache:
   - rm -rfv $CABALHOME/packages/head.hackage
 jobs:
   include:
-    - compiler: ghc-8.8.1
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.8.1","cabal-install-3.0"]}}
+    - compiler: ghcjs-8.4
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"},{"sourceline":"deb http://ppa.launchpad.net/hvr/ghcjs/ubuntu xenial main"},{"sourceline":"deb https://deb.nodesource.com/node_10.x xenial main","key_url":"https://deb.nodesource.com/gpgkey/nodesource.gpg.key"}],"packages":["ghcjs-8.4","cabal-install-3.4","ghc-8.4.4","nodejs"]}}
+      os: linux
+    - compiler: ghc-8.10.2
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.10.2","cabal-install-3.4"]}}
+      os: linux
+    - compiler: ghc-8.8.4
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.8.4","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-8.6.4
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.6.4","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.6.4","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-8.4.4
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.4.4","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.4.4","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-8.2.2
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.2.2","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.2.2","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-8.0.2
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.0.2","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-8.0.2","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.10.3
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.10.3","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.10.3","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.8.4
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.8.4","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.8.4","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.6.3
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.6.3","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.6.3","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.4.2
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.4.2","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.4.2","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.2.2
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.2.2","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.2.2","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-7.0.4
-      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.0.4","cabal-install-3.0"]}}
+      addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-7.0.4","cabal-install-3.4"]}}
       os: linux
     - compiler: ghc-head
       addons: {"apt":{"sources":[{"sourceline":"deb http://ppa.launchpad.net/hvr/ghc/ubuntu xenial main","key_url":"https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x063dab2bdc0b3f9fcebc378bff3aeacef6f88286"}],"packages":["ghc-head","cabal-install-head"]}}
@@ -68,9 +78,18 @@ jobs:
   allow_failures:
     - compiler: ghc-head
 before_install:
+  - |
+    if echo $CC | grep -q ghcjs; then
+        GHCJS=true;
+    else
+        GHCJS=false;
+    fi
   - HC=$(echo "/opt/$CC/bin/ghc" | sed 's/-/\//')
   - WITHCOMPILER="-w $HC"
+  - if $GHCJS ; then HC=${HC}js ; fi
+  - if $GHCJS ; then WITHCOMPILER="--ghcjs ${WITHCOMPILER}js" ; fi
   - HADDOCK=$(echo "/opt/$CC/bin/haddock" | sed 's/-/\//')
+  - if $GHCJS ; then PATH="/opt/ghc/8.4.4/bin:$PATH" ; fi
   - HCPKG="$HC-pkg"
   - unset CC
   - CABAL=/opt/ghc/bin/cabal
@@ -82,10 +101,10 @@ before_install:
   - CABAL="$CABAL -vnormal+nowrap"
   - set -o pipefail
   - TEST=--enable-tests
-  - if [ $HCNUMVER -lt 70400 ] ; then TEST=--disable-tests ; fi
+  - if ! $GHCJS && [ $HCNUMVER -lt 70400 ] ; then TEST=--disable-tests ; fi
   - BENCH=--enable-benchmarks
   - HEADHACKAGE=false
-  - if [ $HCNUMVER -gt 80801 ] ; then HEADHACKAGE=true ; fi
+  - if ! $GHCJS && [ $HCNUMVER -gt 81002 ] ; then HEADHACKAGE=true ; fi
   - rm -f $CABALHOME/config
   - |
     echo "verbose: normal +nowrap +markoutput"          >> $CABALHOME/config
@@ -117,6 +136,8 @@ before_install:
 install:
   - ${CABAL} --version
   - echo "$(${HC} --version) [$(${HC} --print-project-git-commit-id 2> /dev/null || echo '?')]"
+  - node --version
+  - echo $GHCJS
   - |
     echo "program-default-options"                >> $CABALHOME/config
     echo "  ghc-options: $GHCJOBS +RTS -M6G -RTS" >> $CABALHOME/config
@@ -128,6 +149,8 @@ install:
   - touch cabal.project
   - |
     echo "packages: ." >> cabal.project
+  - if $GHCJS || ! $GHCJS && [ $HCNUMVER -ge 80200 ] ; then echo 'package integer-logarithms' >> cabal.project ; fi
+  - "if $GHCJS || ! $GHCJS && [ $HCNUMVER -ge 80200 ] ; then echo '  ghc-options: -Werror=missing-methods' >> cabal.project ; fi"
   - |
   - "for pkg in $($HCPKG list --simple-output); do echo $pkg | sed 's/-[^-]*$//' | (grep -vE -- '^(integer-logarithms)$' || true) | sed 's/^/constraints: /' | sed 's/$/ installed/' >> cabal.project.local; done"
   - cat cabal.project || true
@@ -136,8 +159,8 @@ install:
   - ${CABAL} v2-freeze $WITHCOMPILER ${TEST} ${BENCH}
   - "cat cabal.project.freeze | sed -E 's/^(constraints: *| *)//' | sed 's/any.//'"
   - rm  cabal.project.freeze
-  - ${CABAL} v2-build $WITHCOMPILER ${TEST} ${BENCH} --dep -j2 all
-  - ${CABAL} v2-build $WITHCOMPILER --disable-tests --disable-benchmarks --dep -j2 all
+  - travis_wait 40 ${CABAL} v2-build $WITHCOMPILER ${TEST} ${BENCH} --dep -j2 all
+  - travis_wait 40 ${CABAL} v2-build $WITHCOMPILER --disable-tests --disable-benchmarks --dep -j2 all
 script:
   - DISTDIR=$(mktemp -d /tmp/dist-test.XXXX)
   # Packaging...
@@ -153,6 +176,8 @@ script:
   - touch cabal.project
   - |
     echo "packages: ${PKGDIR_integer_logarithms}" >> cabal.project
+  - if $GHCJS || ! $GHCJS && [ $HCNUMVER -ge 80200 ] ; then echo 'package integer-logarithms' >> cabal.project ; fi
+  - "if $GHCJS || ! $GHCJS && [ $HCNUMVER -ge 80200 ] ; then echo '  ghc-options: -Werror=missing-methods' >> cabal.project ; fi"
   - |
   - "for pkg in $($HCPKG list --simple-output); do echo $pkg | sed 's/-[^-]*$//' | (grep -vE -- '^(integer-logarithms)$' || true) | sed 's/^/constraints: /' | sed 's/$/ installed/' >> cabal.project.local; done"
   - cat cabal.project || true
@@ -164,11 +189,11 @@ script:
   # build & run tests, build benchmarks
   - ${CABAL} v2-build $WITHCOMPILER ${TEST} ${BENCH} all
   # Testing...
-  - if [ $HCNUMVER -ge 70400 ] ; then ${CABAL} v2-test $WITHCOMPILER ${TEST} ${BENCH} all ; fi
+  - if ! $GHCJS && [ $HCNUMVER -ge 70400 ] ; then ${CABAL} v2-test $WITHCOMPILER ${TEST} ${BENCH} all ; fi
   # cabal check...
   - (cd ${PKGDIR_integer_logarithms} && ${CABAL} -vnormal check)
   # haddock...
-  - ${CABAL} v2-haddock $WITHCOMPILER --with-haddock $HADDOCK ${TEST} ${BENCH} all
+  - if ! $GHCJS ; then ${CABAL} v2-haddock $WITHCOMPILER --with-haddock $HADDOCK ${TEST} ${BENCH} all ; fi
   # Building without installed constraints for packages in global-db...
   - rm -f cabal.project.local
   - ${CABAL} v2-build $WITHCOMPILER --disable-tests --disable-benchmarks all
@@ -177,5 +202,5 @@ script:
   # Constraint set check-bounds
   - ${CABAL} v2-build $WITHCOMPILER --disable-tests --disable-benchmarks --constraint='integer-logarithms +check-bounds' all
 
-# REGENDATA ("0.9.20200125",["--output=.travis.yml","--config=haskell-ci.config","integer-logarithms.cabal"])
+# REGENDATA ("0.11.20200918",["--output=.travis.yml","--config=haskell-ci.config","integer-logarithms.cabal"])
 # EOF
