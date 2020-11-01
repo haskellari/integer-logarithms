@@ -3,14 +3,14 @@ version:            1.0.3
 x-revision:         2
 cabal-version:      >=1.10
 author:             Daniel Fischer
-copyright:          (c) 2011 Daniel Fischer
+copyright:          (c) 2011 Daniel Fischer, 2017-2020 Oleg Grenrus, Andrew Lelechenko
 license:            MIT
 license-file:       LICENSE
 maintainer:         Oleg Grenrus <oleg.grenrus@iki.fi>
 build-type:         Simple
 stability:          Provisional
-homepage:           https://github.com/Bodigrim/integer-logarithms
-bug-reports:        https://github.com/Bodigrim/integer-logarithms/issues
+homepage:           https://github.com/haskellari/integer-logarithms
+bug-reports:        https://github.com/haskellari/integer-logarithms/issues
 synopsis:           Integer logarithms.
 description:
   "Math.NumberTheory.Logarithms" and "Math.NumberTheory.Powers.Integer"
@@ -32,18 +32,13 @@ tested-with:
      || ==8.2.2
      || ==8.4.4
      || ==8.6.4
-     || ==8.8.3
-     || ==8.10.1
+     || ==8.8.4
+     || ==8.10.2
   , GHCJS ==8.4
 
 extra-source-files:
   readme.md
   changelog.md
-
-flag ghc-bignum
-  description: ghc-bignum
-  default:     True
-  manual:      False
 
 flag integer-gmp
   description: integer-gmp or integer-simple
@@ -66,10 +61,13 @@ library
   if !impl(ghc >=7.10)
     build-depends: nats >=1.1.2 && <1.2
 
-  if flag(ghc-bignum)
+  if impl(ghc >= 9.0)
     build-depends:
         base        >=4.15
       , ghc-bignum  >=1.0  && <1.1
+
+    if !flag(integer-gmp)
+      build-depends: invalid-cabal-flag-settings <0
 
   else
     build-depends: base <4.15
@@ -98,7 +96,7 @@ library
 
 source-repository head
   type:     git
-  location: https://github.com/Bodigrim/integer-logarithms
+  location: https://github.com/haskellari/integer-logarithms
 
 test-suite spec
   type:             exitcode-stdio-1.0

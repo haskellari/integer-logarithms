@@ -1,2 +1,5 @@
 packages: .
 tests: True
+
+-- helpful with GHC HEAD
+-- constraints: QuickCheck -templatehaskell
