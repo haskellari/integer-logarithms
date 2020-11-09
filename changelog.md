@@ -11,7 +11,7 @@
 1.0.2.2
 -------
 
-- GHC-8.6.1 compatible relase
+- GHC-8.6.1 compatible release
 - Fix compilation when `+check-bounds`
 
 1.0.2.1

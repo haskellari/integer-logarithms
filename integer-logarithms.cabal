@@ -57,7 +57,7 @@ library
   build-depends:
       array     >=0.3 && <0.6
     , base      >=4.3 && <4.16
-    , ghc-prim  >=0   && <0.8
+    , ghc-prim  <0.8
 
   if !impl(ghc >=7.10)
     build-depends: nats >=1.1.2 && <1.2
