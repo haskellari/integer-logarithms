@@ -8,9 +8,9 @@
 #
 # For more information, see https://github.com/haskell-CI/haskell-ci
 #
-# version: 0.13.20211029
+# version: 0.13.20211030
 #
-# REGENDATA ("0.13.20211029",["github","integer-logarithms.cabal"])
+# REGENDATA ("0.13.20211030",["github","integer-logarithms.cabal"])
 #
 name: Haskell-CI
 on:
@@ -39,7 +39,7 @@ jobs:
             compilerKind: ghc
             compilerVersion: 9.2.1
             setup-method: ghcup
-            allow-failure: true
+            allow-failure: false
           - compiler: ghc-9.0.1
             compilerKind: ghc
             compilerVersion: 9.0.1
@@ -172,7 +172,7 @@ jobs:
           echo "HCNUMVER=$HCNUMVER" >> "$GITHUB_ENV"
           if [ $((GHCJSARITH || ! GHCJSARITH && HCNUMVER >= 70400)) -ne 0 ] ; then echo "ARG_TESTS=--enable-tests" >> "$GITHUB_ENV" ; else echo "ARG_TESTS=--disable-tests" >> "$GITHUB_ENV" ; fi
           echo "ARG_BENCH=--enable-benchmarks" >> "$GITHUB_ENV"
-          if [ $((! GHCJSARITH && HCNUMVER >= 90200)) -ne 0 ] ; then echo "HEADHACKAGE=true" >> "$GITHUB_ENV" ; else echo "HEADHACKAGE=false" >> "$GITHUB_ENV" ; fi
+          if [ $((! GHCJSARITH && HCNUMVER > 90201)) -ne 0 ] ; then echo "HEADHACKAGE=true" >> "$GITHUB_ENV" ; else echo "HEADHACKAGE=false" >> "$GITHUB_ENV" ; fi
           echo "ARG_COMPILER=--$HCKIND --with-compiler=$HC" >> "$GITHUB_ENV"
         env:
           HCKIND: ${{ matrix.compilerKind }}
