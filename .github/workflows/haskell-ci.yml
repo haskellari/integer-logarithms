@@ -8,17 +8,21 @@
 #
 # For more information, see https://github.com/haskell-CI/haskell-ci
 #
-# version: 0.11.20210220
+# version: 0.13.20211029
 #
-# REGENDATA ("0.11.20210220",["github","integer-logarithms.cabal"])
+# REGENDATA ("0.13.20211029",["github","integer-logarithms.cabal"])
 #
 name: Haskell-CI
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 jobs:
   linux:
-    name: Haskell-CI - Linux - GHC ${{ matrix.ghc }}
+    name: Haskell-CI - Linux - ${{ matrix.compiler }}
     runs-on: ubuntu-18.04
     container:
       image: buildpack-deps:bionic
@@ -26,63 +30,154 @@ jobs:
     strategy:
       matrix:
         include:
-          - ghc: 9.0.1
+          - compiler: ghcjs-8.4
+            compilerKind: ghcjs
+            compilerVersion: "8.4"
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.10.4
+          - compiler: ghc-9.2.1
+            compilerKind: ghc
+            compilerVersion: 9.2.1
+            setup-method: ghcup
+            allow-failure: true
+          - compiler: ghc-9.0.1
+            compilerKind: ghc
+            compilerVersion: 9.0.1
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.8.4
+          - compiler: ghc-8.10.4
+            compilerKind: ghc
+            compilerVersion: 8.10.4
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.6.4
+          - compiler: ghc-8.8.4
+            compilerKind: ghc
+            compilerVersion: 8.8.4
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.4.4
+          - compiler: ghc-8.6.4
+            compilerKind: ghc
+            compilerVersion: 8.6.4
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.2.2
+          - compiler: ghc-8.4.4
+            compilerKind: ghc
+            compilerVersion: 8.4.4
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 8.0.2
+          - compiler: ghc-8.2.2
+            compilerKind: ghc
+            compilerVersion: 8.2.2
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.10.3
+          - compiler: ghc-8.0.2
+            compilerKind: ghc
+            compilerVersion: 8.0.2
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.8.4
+          - compiler: ghc-7.10.3
+            compilerKind: ghc
+            compilerVersion: 7.10.3
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.6.3
+          - compiler: ghc-7.8.4
+            compilerKind: ghc
+            compilerVersion: 7.8.4
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.4.2
+          - compiler: ghc-7.6.3
+            compilerKind: ghc
+            compilerVersion: 7.6.3
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.2.2
+          - compiler: ghc-7.4.2
+            compilerKind: ghc
+            compilerVersion: 7.4.2
+            setup-method: hvr-ppa
             allow-failure: false
-          - ghc: 7.0.4
+          - compiler: ghc-7.2.2
+            compilerKind: ghc
+            compilerVersion: 7.2.2
+            setup-method: hvr-ppa
+            allow-failure: false
+          - compiler: ghc-7.0.4
+            compilerKind: ghc
+            compilerVersion: 7.0.4
+            setup-method: hvr-ppa
             allow-failure: false
       fail-fast: false
     steps:
+      - name: Set GHCJS environment variables
+        run: |
+          if [ $HCKIND = ghcjs ]; then
+          echo "GHCJS=true" >> "$GITHUB_ENV"
+          echo "GHCJSARITH=1" >> "$GITHUB_ENV"
+          else
+          echo "GHCJS=false" >> "$GITHUB_ENV"
+          echo "GHCJSARITH=0" >> "$GITHUB_ENV"
+          fi
+        env:
+          HCKIND: ${{ matrix.compilerKind }}
+          HCNAME: ${{ matrix.compiler }}
+          HCVER: ${{ matrix.compilerVersion }}
       - name: apt
         run: |
           apt-get update
-          apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common
-          apt-add-repository -y 'ppa:hvr/ghc'
-          apt-get update
-          apt-get install -y ghc-$GHC_VERSION cabal-install-3.2
+          apt-get install -y --no-install-recommends gnupg ca-certificates dirmngr curl git software-properties-common libtinfo5
+          if [ "${{ matrix.setup-method }}" = ghcup ]; then
+            mkdir -p "$HOME/.ghcup/bin"
+            curl -sL https://downloads.haskell.org/ghcup/0.1.17.3/x86_64-linux-ghcup-0.1.17.3 > "$HOME/.ghcup/bin/ghcup"
+            chmod a+x "$HOME/.ghcup/bin/ghcup"
+            "$HOME/.ghcup/bin/ghcup" install ghc "$HCVER"
+            "$HOME/.ghcup/bin/ghcup" install cabal 3.6.2.0
+          else
+            apt-add-repository -y 'ppa:hvr/ghc'
+            if [ $((GHCJSARITH)) -ne 0 ] ; then apt-add-repository -y 'ppa:hvr/ghcjs' ; fi
+            if [ $((GHCJSARITH)) -ne 0 ] ; then curl -sSL "https://deb.nodesource.com/gpgkey/nodesource.gpg.key" | apt-key add - ; fi
+            if [ $((GHCJSARITH)) -ne 0 ] ; then apt-add-repository -y 'deb https://deb.nodesource.com/node_10.x bionic main' ; fi
+            apt-get update
+            if [ $((GHCJSARITH)) -ne 0 ] ; then apt-get install -y "$HCNAME" ghc-8.4.4 nodejs ; else apt-get install -y "$HCNAME" ; fi
+            mkdir -p "$HOME/.ghcup/bin"
+            curl -sL https://downloads.haskell.org/ghcup/0.1.17.3/x86_64-linux-ghcup-0.1.17.3 > "$HOME/.ghcup/bin/ghcup"
+            chmod a+x "$HOME/.ghcup/bin/ghcup"
+            "$HOME/.ghcup/bin/ghcup" install cabal 3.6.2.0
+          fi
         env:
-          GHC_VERSION: ${{ matrix.ghc }}
+          HCKIND: ${{ matrix.compilerKind }}
+          HCNAME: ${{ matrix.compiler }}
+          HCVER: ${{ matrix.compilerVersion }}
       - name: Set PATH and environment variables
         run: |
           echo "$HOME/.cabal/bin" >> $GITHUB_PATH
-          echo "LANG=C.UTF-8" >> $GITHUB_ENV
-          echo "CABAL_DIR=$HOME/.cabal" >> $GITHUB_ENV
-          echo "CABAL_CONFIG=$HOME/.cabal/config" >> $GITHUB_ENV
-          HC=/opt/ghc/$GHC_VERSION/bin/ghc
-          echo "HC=$HC" >> $GITHUB_ENV
-          echo "HCPKG=/opt/ghc/$GHC_VERSION/bin/ghc-pkg" >> $GITHUB_ENV
-          echo "HADDOCK=/opt/ghc/$GHC_VERSION/bin/haddock" >> $GITHUB_ENV
-          echo "CABAL=/opt/cabal/3.2/bin/cabal -vnormal+nowrap" >> $GITHUB_ENV
+          if [ $((GHCJSARITH)) -ne 0 ] ; then echo "/opt/ghc/8.4.4/bin" >> $GITHUB_PATH ; fi
+          echo "LANG=C.UTF-8" >> "$GITHUB_ENV"
+          echo "CABAL_DIR=$HOME/.cabal" >> "$GITHUB_ENV"
+          echo "CABAL_CONFIG=$HOME/.cabal/config" >> "$GITHUB_ENV"
+          HCDIR=/opt/$HCKIND/$HCVER
+          if [ "${{ matrix.setup-method }}" = ghcup ]; then
+            HC=$HOME/.ghcup/bin/$HCKIND-$HCVER
+            echo "HC=$HC" >> "$GITHUB_ENV"
+            echo "HCPKG=$HOME/.ghcup/bin/$HCKIND-pkg-$HCVER" >> "$GITHUB_ENV"
+            echo "HADDOCK=$HOME/.ghcup/bin/haddock-$HCVER" >> "$GITHUB_ENV"
+            echo "CABAL=$HOME/.ghcup/bin/cabal-3.6.2.0 -vnormal+nowrap" >> "$GITHUB_ENV"
+          else
+            HC=$HCDIR/bin/$HCKIND
+            echo "HC=$HC" >> "$GITHUB_ENV"
+            echo "HCPKG=$HCDIR/bin/$HCKIND-pkg" >> "$GITHUB_ENV"
+            echo "HADDOCK=$HCDIR/bin/haddock" >> "$GITHUB_ENV"
+            echo "CABAL=$HOME/.ghcup/bin/cabal-3.6.2.0 -vnormal+nowrap" >> "$GITHUB_ENV"
+          fi
+
           HCNUMVER=$(${HC} --numeric-version|perl -ne '/^(\d+)\.(\d+)\.(\d+)(\.(\d+))?$/; print(10000 * $1 + 100 * $2 + ($3 == 0 ? $5 != 1 : $3))')
-          echo "HCNUMVER=$HCNUMVER" >> $GITHUB_ENV
-          if [ $((GHCJSARITH || ! GHCJSARITH && HCNUMVER >= 70400)) -ne 0 ] ; then echo "ARG_TESTS=--enable-tests" >> $GITHUB_ENV ; else echo "ARG_TESTS=--disable-tests" >> $GITHUB_ENV ; fi
-          echo "ARG_BENCH=--enable-benchmarks" >> $GITHUB_ENV
-          if [ $((! GHCJSARITH && HCNUMVER > 90001)) -ne 0 ] ; then echo "HEADHACKAGE=true" >> $GITHUB_ENV ; else echo "HEADHACKAGE=false" >> $GITHUB_ENV ; fi
-          echo "ARG_COMPILER=--ghc --with-compiler=/opt/ghc/$GHC_VERSION/bin/ghc" >> $GITHUB_ENV
-          echo "GHCJSARITH=0" >> $GITHUB_ENV
+          echo "HCNUMVER=$HCNUMVER" >> "$GITHUB_ENV"
+          if [ $((GHCJSARITH || ! GHCJSARITH && HCNUMVER >= 70400)) -ne 0 ] ; then echo "ARG_TESTS=--enable-tests" >> "$GITHUB_ENV" ; else echo "ARG_TESTS=--disable-tests" >> "$GITHUB_ENV" ; fi
+          echo "ARG_BENCH=--enable-benchmarks" >> "$GITHUB_ENV"
+          if [ $((! GHCJSARITH && HCNUMVER >= 90200)) -ne 0 ] ; then echo "HEADHACKAGE=true" >> "$GITHUB_ENV" ; else echo "HEADHACKAGE=false" >> "$GITHUB_ENV" ; fi
+          echo "ARG_COMPILER=--$HCKIND --with-compiler=$HC" >> "$GITHUB_ENV"
         env:
-          GHC_VERSION: ${{ matrix.ghc }}
+          HCKIND: ${{ matrix.compilerKind }}
+          HCNAME: ${{ matrix.compiler }}
+          HCVER: ${{ matrix.compilerVersion }}
       - name: env
         run: |
           env
@@ -106,7 +201,6 @@ jobs:
             url: http://hackage.haskell.org/
           EOF
           if $HEADHACKAGE; then
-          echo "allow-newer: $($HCPKG list --simple-output | sed -E 's/([a-zA-Z-]+)-[0-9.]+/*:\1/g')" >> $CABAL_CONFIG
           cat >> $CABAL_CONFIG <<EOF
           repository head.hackage.ghc.haskell.org
              url: https://ghc.gitlab.haskell.org/head.hackage/
@@ -123,6 +217,8 @@ jobs:
           $HC --version || true
           $HC --print-project-git-commit-id || true
           $CABAL --version || true
+          if [ $((GHCJSARITH)) -ne 0 ] ; then node --version ; fi
+          if [ $((GHCJSARITH)) -ne 0 ] ; then echo $GHCJS ; fi
       - name: update cabal index
         run: |
           $CABAL v2-update -v
@@ -155,7 +251,8 @@ jobs:
       - name: generate cabal.project
         run: |
           PKGDIR_integer_logarithms="$(find "$GITHUB_WORKSPACE/unpacked" -maxdepth 1 -type d -regex '.*/integer-logarithms-[0-9.]*')"
-          echo "PKGDIR_integer_logarithms=${PKGDIR_integer_logarithms}" >> $GITHUB_ENV
+          echo "PKGDIR_integer_logarithms=${PKGDIR_integer_logarithms}" >> "$GITHUB_ENV"
+          rm -f cabal.project cabal.project.local
           touch cabal.project
           touch cabal.project.local
           echo "packages: ${PKGDIR_integer_logarithms}" >> cabal.project
@@ -163,6 +260,9 @@ jobs:
           if [ $((GHCJSARITH || ! GHCJSARITH && HCNUMVER >= 80200)) -ne 0 ] ; then echo "    ghc-options: -Werror=missing-methods" >> cabal.project ; fi
           cat >> cabal.project <<EOF
           EOF
+          if $HEADHACKAGE; then
+          echo "allow-newer: $($HCPKG list --simple-output | sed -E 's/([a-zA-Z-]+)-[0-9.]+/*:\1,/g')" >> cabal.project
+          fi
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: $_ installed\n" unless /^(integer-logarithms)$/; }' >> cabal.project.local
           cat cabal.project
           cat cabal.project.local
@@ -173,9 +273,9 @@ jobs:
       - name: cache
         uses: actions/cache@v2
         with:
-          key: ${{ runner.os }}-${{ matrix.ghc }}-${{ github.sha }}
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ github.sha }}
           path: ~/.cabal/store
-          restore-keys: ${{ runner.os }}-${{ matrix.ghc }}-
+          restore-keys: ${{ runner.os }}-${{ matrix.compiler }}-
       - name: install dependencies
         run: |
           $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --dependencies-only -j2 all
@@ -205,4 +305,5 @@ jobs:
           rm -f cabal.project.local
       - name: constraint set check-bounds
         run: |
+          $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --constraint='integer-logarithms +check-bounds' --dependencies-only -j2 all
           $CABAL v2-build $ARG_COMPILER --disable-tests --disable-benchmarks --constraint='integer-logarithms +check-bounds' all
