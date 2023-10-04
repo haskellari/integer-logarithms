@@ -1,6 +1,6 @@
 branches: master
 tests: >=7.4
-head-hackage: >=9.7
+head-hackage: False
 
 constraint-set check-bounds
   constraints: integer-logarithms +check-bounds
