@@ -124,7 +124,7 @@ test-suite spec
     , integer-logarithms
     , QuickCheck          >=2.14.1 && <2.15
     , smallcheck          >=1.2    && <1.3
-    , tasty               >=0.10   && <1.5
+    , tasty               >=0.10   && <1.6
     , tasty-hunit         >=0.9    && <0.11
     , tasty-quickcheck    >=0.8    && <0.11
     , tasty-smallcheck    >=0.8    && <0.9
