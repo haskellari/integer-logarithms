@@ -8,8 +8,6 @@
 -- Tests for Math.NumberTheory.Logarithms
 --
 
-{-# LANGUAGE CPP       #-}
-
 {-# OPTIONS_GHC -fno-warn-type-defaults #-}
 
 module Math.NumberTheory.LogarithmsTests
@@ -17,11 +15,6 @@ module Math.NumberTheory.LogarithmsTests
   ) where
 
 import Test.Tasty
-
-#if MIN_VERSION_base(4,8,0)
-#else
-import Data.Word
-#endif
 import Numeric.Natural
 
 import Math.NumberTheory.Logarithms

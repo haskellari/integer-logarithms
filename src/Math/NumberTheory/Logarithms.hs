@@ -11,9 +11,7 @@
 --
 {-# LANGUAGE CPP #-}
 {-# LANGUAGE MagicHash #-}
-#if __GLASGOW_HASKELL__ >= 702
 {-# LANGUAGE Trustworthy #-}
-#endif
 module Math.NumberTheory.Logarithms
     ( -- * Integer logarithms with input checks
       integerLogBase
@@ -329,10 +327,4 @@ naturalLog2# (NatJ# n) = integerLog2# (Jp# n)
 #else
 naturalLog2# n = integerLog2# (toInteger n)
 #endif
-#endif
-
-#if __GLASGOW_HASKELL__ < 707
--- The times they are a-changing. The types of primops too :(
-isTrue# :: Bool -> Bool
-isTrue# = id
 #endif
