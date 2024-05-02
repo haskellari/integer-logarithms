@@ -9,25 +9,14 @@
 -- Potentially faster power function for 'Natural' base and 'Int'
 -- or 'Word' exponent.
 --
-{-# LANGUAGE CPP          #-}
-#if __GLASGOW_HASKELL__ >= 702
-#if __GLASGOW_HASKELL__ >= 704
 {-# LANGUAGE Safe #-}
-#else
-{-# LANGUAGE Trustworthy #-}
-#endif
-#endif
 module Math.NumberTheory.Powers.Natural
     {-# DEPRECATED "It is no faster than (^)" #-}
     ( naturalPower
     , naturalWordPower
     ) where
 
-#if !MIN_VERSION_base(4,8,0)
-import Data.Word
-#endif
-
-import Numeric.Natural
+import Numeric.Natural (Natural)
 
 -- | Power of an 'Natural' by the left-to-right repeated squaring algorithm.
 --   This needs two multiplications in each step while the right-to-left

@@ -9,23 +9,12 @@
 -- Potentially faster power function for 'Integer' base and 'Int'
 -- or 'Word' exponent.
 --
-{-# LANGUAGE CPP          #-}
-#if __GLASGOW_HASKELL__ >= 702
-#if __GLASGOW_HASKELL__ >= 704
 {-# LANGUAGE Safe #-}
-#else
-{-# LANGUAGE Trustworthy #-}
-#endif
-#endif
 module Math.NumberTheory.Powers.Integer
     {-# DEPRECATED "It is no faster than (^)" #-}
     ( integerPower
     , integerWordPower
     ) where
-
-#if !MIN_VERSION_base(4,8,0)
-import Data.Word
-#endif
 
 -- | Power of an 'Integer' by the left-to-right repeated squaring algorithm.
 --   This needs two multiplications in each step while the right-to-left
