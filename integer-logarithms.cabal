@@ -112,7 +112,7 @@ test-suite spec
   build-depends:
       base
     , integer-logarithms
-    , QuickCheck          >=2.14.1 && <2.15
+    , QuickCheck          >=2.14.1 && <2.16
     , smallcheck          >=1.2    && <1.3
     , tasty               >=1.4   && <1.6
     , tasty-hunit         >=0.10    && <0.11
