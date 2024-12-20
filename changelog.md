@@ -2,6 +2,7 @@
 -----
 
 - Drop support for GHCs prior 8.6.5
+- GHC-9.12 support
 
 1.0.3.1
 -------
