@@ -1,3 +1,8 @@
+1.1.0
+-----
+
+- Remove deprecated modules `Math.NumberTheory.Powers.Integer` and `Math.NumberTheory.Powers.Natural`
+
 1.0.4
 -----
 

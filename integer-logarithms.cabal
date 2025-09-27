@@ -14,8 +14,7 @@ homepage:           https://github.com/haskellari/integer-logarithms
 bug-reports:        https://github.com/haskellari/integer-logarithms/issues
 synopsis:           Integer logarithms.
 description:
-  "Math.NumberTheory.Logarithms" and "Math.NumberTheory.Powers.Integer"
-  from the arithmoi package.
+  "Math.NumberTheory.Logarithms" from the arithmoi package.
   .
   Also provides "GHC.Integer.Logarithms.Compat" and
   "Math.NumberTheory.Power.Natural" modules, as well as some
@@ -78,8 +77,6 @@ library
 
   exposed-modules:
     Math.NumberTheory.Logarithms
-    Math.NumberTheory.Powers.Integer
-    Math.NumberTheory.Powers.Natural
 
   -- compat module
   exposed-modules:  GHC.Integer.Logarithms.Compat
