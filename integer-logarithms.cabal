@@ -53,8 +53,7 @@ library
   hs-source-dirs:   src
   build-depends:
       array     >=0.5.3.0  && <0.6
-    , base      >=4.12.0.0 && <4.22
-    , ghc-prim  <0.14
+    , base      >=4.12.0.0 && <4.23
 
   if !impl(ghc >=7.10)
     build-depends: nats >=1.1.2 && <1.2
@@ -62,7 +61,7 @@ library
   if impl(ghc >=9.0)
     build-depends:
         base        >=4.15
-      , ghc-bignum  >=1.0  && <1.4
+      , ghc-bignum  >=1.0  && <1.5
 
     if !flag(integer-gmp)
       build-depends: invalid-cabal-flag-settings <0
