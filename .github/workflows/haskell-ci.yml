@@ -211,7 +211,6 @@ jobs:
           if [ $((HCNUMVER >= 90000)) -ne 0 ] ; then echo "package integer-logarithms" >> cabal.project ; fi
           if [ $((HCNUMVER >= 90000)) -ne 0 ] ; then echo "    ghc-options: -Werror=incomplete-patterns -Werror=incomplete-uni-patterns" >> cabal.project ; fi
           cat >> cabal.project <<EOF
-          allow-newer: splitmix-0.1.3.1:base
           EOF
           $HCPKG list --simple-output --names-only | perl -ne 'for (split /\s+/) { print "constraints: any.$_ installed\n" unless /^(integer-logarithms)$/; }' >> cabal.project.local
           cat cabal.project
