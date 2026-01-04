@@ -1,5 +1,4 @@
 branches: master
-tests: >=7.4
 head-hackage: False
 
 constraint-set check-bounds
