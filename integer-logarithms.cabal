@@ -56,9 +56,6 @@ library
       array  >=0.5.3.0  && <0.6
     , base   >=4.12.0.0 && <4.23
 
-  if !impl(ghc >=7.10)
-    build-depends: nats >=1.1.2 && <1.2
-
   if impl(ghc >=9.0)
     build-depends: base >=4.15
 
